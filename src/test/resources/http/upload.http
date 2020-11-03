@@ -1,4 +1,13 @@
 POST http://localhost:8081/api/file/upload
-Content-Type: multipart/form-data; boundary=boundary
---
-Content-Disposition: form-data; name="first"; filename="./src/test/resources/test_upload.txt"
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="fileName"; filename="test_upload.txt"
+
+< "test_upload.txt"
+--WebAppBoundary--
+
+
+
+
+

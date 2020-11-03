@@ -5,6 +5,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import pl.damianrowinski.code_guardians.exception.EmptyFileException;
 
 import java.io.*;
 
@@ -16,8 +17,11 @@ public class FileService {
     private String uploadPath;
 
     public String save(MultipartFile fileName) {
+        if(fileName == null) throw new EmptyFileException("Plik nie może być pusty");
 
-        File fileToSave = new File(uploadPath + fileName.getOriginalFilename());
+        String destinationPath = uploadPath +"\\"+ fileName.getOriginalFilename();
+
+        File fileToSave = new File(destinationPath);
 
         try (InputStream is = fileName.getInputStream();
              OutputStream os = new FileOutputStream(fileToSave)){
@@ -27,6 +31,6 @@ public class FileService {
             log.error("Błąd przy próbie wgrania pliku.");
         }
 
-        return null;
+        return fileName.getOriginalFilename();
     }
 }

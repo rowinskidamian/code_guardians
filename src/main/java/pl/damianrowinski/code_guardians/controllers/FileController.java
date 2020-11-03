@@ -2,7 +2,7 @@ package pl.damianrowinski.code_guardians.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +21,8 @@ public class FileController {
     @Value("${upload.folder}")
     private String filesFolder;
 
-    @RequestMapping("/upload")
-    public FileResource upload(@RequestParam("fileName")MultipartFile fileName) {
+    @PostMapping("/upload")
+    public FileResource upload(@RequestParam("fileName") MultipartFile fileName) {
         String savedFile = fileService.save(fileName);
 
         String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
