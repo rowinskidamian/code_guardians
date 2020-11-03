@@ -21,7 +21,6 @@ public class FileController {
     @Value("${upload.folder}")
     private String filesFolder;
 
-
     @RequestMapping("/upload")
     public FileResource upload(@RequestParam("fileName")MultipartFile fileName) {
         String savedFile = fileService.save(fileName);
@@ -34,6 +33,5 @@ public class FileController {
 
         return new FileResource(savedFile, uri, fileName.getContentType(), fileName.getSize());
     }
-
 
 }
