@@ -14,9 +14,9 @@ import java.io.*;
 public class FileService {
 
     @Value("${upload.folder}")
-    private String uploadPath;
+    private String defaultUploadPath;
 
-    public String save(MultipartFile fileName) {
+    public String save(MultipartFile fileName, String uploadPath) {
         if(fileName == null) throw new EmptyFileException("Plik nie może być pusty");
 
         String destinationPath = uploadPath +"\\"+ fileName.getOriginalFilename();
