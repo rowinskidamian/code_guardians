@@ -7,14 +7,14 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.AreaBreak;
 import com.itextpdf.layout.element.Paragraph;
 import org.springframework.stereotype.Service;
-import pl.damianrowinski.code_guardians.model.CertDTO;
+import pl.damianrowinski.code_guardians.domain.model.dtos.CertificateDTO;
 
 import java.io.File;
 
 @Service
 public class PdfEditService {
 
-    public void addDataToPdf(String fileSource, String fileDest, CertDTO dataToAdd) throws Exception {
+    public void addDataToPdf(String fileSource, String fileDest, CertificateDTO dataToAdd) throws Exception {
         File file = new File(fileDest);
         file.getParentFile().mkdirs();
 

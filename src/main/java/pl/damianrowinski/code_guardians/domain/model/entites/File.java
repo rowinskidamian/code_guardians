@@ -1,13 +1,14 @@
-package pl.damianrowinski.code_guardians.model;
+package pl.damianrowinski.code_guardians.domain.model.entites;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
-//@Entity
+@Entity
+@Transactional
+@Table(name = File.TABLE_NAME)
 public class File {
+    final static String TABLE_NAME = "files";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,9 +1,9 @@
-package pl.damianrowinski.code_guardians.model;
+package pl.damianrowinski.code_guardians.domain.model.dtos;
 
 import lombok.Data;
 
 @Data
-public class CertDTO {
+public class CertificateDTO {
     private String commonName;
     private String organization;
     private String alg;

@@ -1,11 +1,11 @@
-package pl.damianrowinski.code_guardians.model;
+package pl.damianrowinski.code_guardians.domain.model.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FileResource {
+public class FileDTO {
     private String name;
     private String uri;
     private String contentType;
