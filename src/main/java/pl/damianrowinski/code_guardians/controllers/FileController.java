@@ -23,19 +23,13 @@ public class FileController {
     private String filesFolder;
 
     @PostMapping("/upload")
-    public FileResource upload(@RequestParam("fileName") MultipartFile fileName) {
-        String savedFile = fileService.save(fileName);
+    public FileResource upload(@RequestParam("fileName") MultipartFile fileName, @RequestParam String filePath) {
+        String savedFile = fileService.save(fileName, filePath);
         long fileSize = fileName.getSize();
 
-        if (fileSize < 1_000_000) throw new FileSizeException("Plik powinien mieć przynajmniej 1mb.");
+//        if (fileSize < 1_000_000) throw new FileSizeException("Plik powinien mieć przynajmniej 1mb.");
 
-        String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(filesFolder)
-                .pathSegment("/")
-                .path(savedFile)
-                .toUriString();
-
-        return new FileResource(savedFile, uri, fileName.getContentType(), fileSize);
+        return new FileResource(savedFile, filePath, fileName.getContentType(), fileSize);
     }
 
 }
