@@ -2,6 +2,7 @@ package pl.damianrowinski.code_guardians.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -32,11 +33,11 @@ public class FileService {
             throws Exception {
         String tempPath = outputPath + "/temp/";
 
-        String tempPdfPath = this.saveTempFileAndGetPath(fileName, tempPath);
-        String savedCertificatePath = this.saveTempFileAndGetPath(certificate, tempPath);
+        String tempPdfPath = saveTempFileAndGetPath(fileName, tempPath);
+        String savedCertificatePath = saveTempFileAndGetPath(certificate, tempPath);
         CertificateDTO certData = certificateService.getDataFromCert(savedCertificatePath);
 
-        UploadedFileDTO uploadedFileData = this.saveDataToBase(tempPdfPath);
+        UploadedFileDTO uploadedFileData = saveDataToBase(tempPdfPath);
         certData.setAlg(uploadedFileData.getDocumentAlg());
         certData.setUuid(uploadedFileData.getUuid());
 
@@ -45,7 +46,14 @@ public class FileService {
         String savedFilePath = fileEncryptionService.encryptFile
                 (editedPdfPath, outputPath + "/" + fileName.getOriginalFilename(), savedCertificatePath);
 
+        clearTemp(tempPath);
+
         return new UploadResponseDTO(savedFilePath, fileName.getContentType(), fileName.getSize());
+    }
+
+    private void clearTemp(String tempPath) throws IOException {
+        File tempDir = new File(tempPath);
+        FileUtils.deleteDirectory(tempDir);
     }
 
     private UploadedFileDTO saveDataToBase(String savedPdfPath) {
