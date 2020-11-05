@@ -5,9 +5,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FileDTO {
-    private String name;
-    private String uri;
+public class UploadResponseDTO {
+    private String savedFilePath;
     private String contentType;
     private long size;
 }

@@ -14,7 +14,9 @@ import java.io.File;
 @Service
 public class PdfEditService {
 
-    public void addDataToPdf(String fileSource, String fileDest, CertificateDTO dataToAdd) throws Exception {
+    public String addDataToPdf(String fileSource, String fileDest, CertificateDTO dataToAdd) throws Exception {
+
+        String savedFilePath = fileDest;
         File file = new File(fileDest);
         file.getParentFile().mkdirs();
 
@@ -31,5 +33,6 @@ public class PdfEditService {
         document.close();
 
         pdfDoc.close();
+        return savedFilePath;
     }
 }
