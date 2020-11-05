@@ -23,11 +23,11 @@ import java.io.*;
 @RequiredArgsConstructor
 public class FileService {
 
+    private final CertificateService certificateService;
+    private final FileEncryptionService fileEncryptionService;
     private final UploadedFileRepository fileRepository;
     private final ModelMapper modelMapper;
-    private final CertificateService certificateService;
     private final PdfEditService pdfEditService;
-    private final FileEncryptionService fileEncryptionService;
 
     public UploadResponseDTO encryptAndSaveFile(MultipartFile fileName, String outputPath, MultipartFile certificate)
             throws Exception {
@@ -37,8 +37,8 @@ public class FileService {
         String savedCertificatePath = saveTempFileAndGetPath(certificate, tempPath);
         CertificateDTO certData = certificateService.getDataFromCert(savedCertificatePath);
 
-        UploadedFileDTO uploadedFileData = saveDataToBase(tempPdfPath);
-        certData.setAlg(uploadedFileData.getDocumentAlg());
+        UploadedFileDTO uploadedFileData = saveDataToBase(tempPdfPath, fileName.getOriginalFilename());
+        certData.setDocumentShortcut(uploadedFileData.getDocumentShortcut());
         certData.setUuid(uploadedFileData.getUuid());
 
         String editedPdfPath = pdfEditService.addDataToPdf
@@ -46,7 +46,7 @@ public class FileService {
         String savedFilePath = fileEncryptionService.encryptFile
                 (editedPdfPath, outputPath + "/" + fileName.getOriginalFilename(), savedCertificatePath);
 
-        clearTemp(tempPath);
+//        clearTemp(tempPath);
 
         return new UploadResponseDTO(savedFilePath, fileName.getContentType(), fileName.getSize());
     }
@@ -56,20 +56,20 @@ public class FileService {
         FileUtils.deleteDirectory(tempDir);
     }
 
-    private UploadedFileDTO saveDataToBase(String savedPdfPath) {
+    private UploadedFileDTO saveDataToBase(String savedPdfPath, String fileName) {
 
         UploadedFile dataToSaveToBase = new UploadedFile();
         dataToSaveToBase.setFilePath(savedPdfPath);
         dataToSaveToBase.setUserName("TEST USER");
-        dataToSaveToBase.setDocumentAlg("TEST ALG");
+        dataToSaveToBase.setDocumentShortcut(fileName);
 
         UploadedFile savedFileData = fileRepository.save(dataToSaveToBase);
-
+        log.info("Database operation - saved: " + savedFileData);
         return modelMapper.map(savedFileData, UploadedFileDTO.class);
     }
 
     private String saveTempFileAndGetPath(MultipartFile fileName, String uploadPath) {
-        if(fileName == null) throw new EmptyFileException("Plik nie może być pusty");
+        if(fileName == null) throw new EmptyFileException("File can not be empty.");
 
         File uploadPathDirs = new File(uploadPath);
         uploadPathDirs.mkdirs();
@@ -83,7 +83,7 @@ public class FileService {
 
             IOUtils.copy(is, os);
         } catch (IOException e) {
-            log.error("Błąd przy próbie wgrania pliku.");
+            log.error("Exception during loading file.");
         }
 
         return destinationPath;

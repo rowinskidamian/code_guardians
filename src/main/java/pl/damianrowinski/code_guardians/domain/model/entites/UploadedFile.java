@@ -8,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Transactional
@@ -19,12 +20,16 @@ import java.time.LocalDateTime;
 public class UploadedFile {
     final static String TABLE_NAME = "uploaded_files";
 
+
+    @Column(name = "uuid", unique = true)
+    private UUID uuid = UUID.randomUUID();
+
+    @Column(name = "document_shortcut")
+    private String documentShortcut;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long uuid;
-
-    @Column(name = "document_alg")
-    private String documentAlg;
+    private long shortcutId;
 
     @Column(name = "operation_date_time")
     private LocalDateTime operationDateTime;
@@ -38,5 +43,9 @@ public class UploadedFile {
     @PrePersist
     public void addOperationDate() {
         operationDateTime = LocalDateTime.now();
+    }
+    @PostPersist
+    public void setShortcut() {
+        documentShortcut = documentShortcut + shortcutId;
     }
 }
