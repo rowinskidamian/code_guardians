@@ -38,7 +38,10 @@ public class FileService {
     public String saveTempFileAndGetPath(MultipartFile fileName, String uploadPath) {
         if(fileName == null) throw new EmptyFileException("Plik nie może być pusty");
 
-        String destinationPath = uploadPath +"\\"+ fileName.getOriginalFilename();
+        File uploadPathDirs = new File(uploadPath);
+        uploadPathDirs.mkdirs();
+
+        String destinationPath = uploadPath + fileName.getOriginalFilename();
 
         File fileToSave = new File(destinationPath);
 

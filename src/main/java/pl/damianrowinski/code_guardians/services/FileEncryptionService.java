@@ -23,9 +23,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class FileEncryptionService {
 
-    public void encryptFile(String fileSource, String fileDestination, String certificateSrc) {
+    public String encryptFile(String fileSource, String fileDestination, String certificateSrc) {
+        String savedFilePath = fileDestination;
         File file = new File(fileDestination);
         file.getParentFile().mkdirs();
+
         try {
             Security.addProvider(new BouncyCastleProvider());
 
@@ -42,14 +44,13 @@ public class FileEncryptionService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return savedFilePath;
     }
 
     private Certificate getPublicCertificate(String path) throws IOException, CertificateException {
         try (FileInputStream is = new FileInputStream(path)) {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            X509Certificate cert = (X509Certificate) cf.generateCertificate(is);
-
-            return cert;
+            return cf.generateCertificate(is);
         }
     }
 
