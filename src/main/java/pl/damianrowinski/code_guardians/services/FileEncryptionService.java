@@ -37,6 +37,7 @@ public class FileEncryptionService {
                             new Certificate[]{cert},
                             new int[]{EncryptionConstants.ALLOW_PRINTING},
                             EncryptionConstants.ENCRYPTION_AES_256)));
+
             pdfDoc.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,9 +48,9 @@ public class FileEncryptionService {
         try (FileInputStream is = new FileInputStream(path)) {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             X509Certificate cert = (X509Certificate) cf.generateCertificate(is);
+
             return cert;
         }
     }
-
 
 }
