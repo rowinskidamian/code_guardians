@@ -6,4 +6,6 @@ import lombok.Data;
 public class CertDTO {
     private String commonName;
     private String organization;
+    private String alg;
+    private long uuid;
 }
