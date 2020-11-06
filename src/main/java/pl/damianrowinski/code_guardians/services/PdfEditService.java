@@ -16,10 +16,8 @@ import java.io.File;
 @Slf4j
 public class PdfEditService {
 
-    public String addDataToPdf(String fileSource, String fileDest, CertificateDTO dataToAdd) throws Exception {
-
-        String savedFilePath = fileDest;
-        File file = new File(fileDest);
+    public File addDataToPdf(File fileSource, File fileDest, CertificateDTO dataToAdd) throws Exception {
+        File file = new File(fileDest, "editedPdf.pdf");
         file.getParentFile().mkdirs();
 
         PdfDocument pdfDoc = new PdfDocument(
@@ -36,6 +34,6 @@ public class PdfEditService {
 
         pdfDoc.close();
         log.info("Edited PDF, added data: " + dataToAdd);
-        return savedFilePath;
+        return fileDest;
     }
 }

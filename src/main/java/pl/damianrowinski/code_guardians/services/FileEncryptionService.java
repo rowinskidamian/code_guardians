@@ -13,7 +13,6 @@ import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -23,19 +22,17 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class FileEncryptionService {
 
-    public String encryptFile(String fileSource, String fileDestination, String certificateSrc) {
-        String savedFilePath = fileDestination;
-        File file = new File(fileDestination);
-        file.getParentFile().mkdirs();
+    public File encryptFile(File fileSource, File fileDestination, File certificateSrc) {
+        fileDestination.getParentFile().mkdirs();
 
         try {
             Security.addProvider(new BouncyCastleProvider());
 
-            Certificate cert = getPublicCertificate(certificateSrc);
+            Certificate cert = getPublicCertificate(certificateSrc.toString());
 
             PdfDocument pdfDoc = new PdfDocument(
                     new PdfReader(fileSource),
-                    new PdfWriter(fileDestination, new WriterProperties().setPublicKeyEncryption(
+                    new PdfWriter(fileDestination.toString(), new WriterProperties().setPublicKeyEncryption(
                             new Certificate[]{cert},
                             new int[]{EncryptionConstants.ALLOW_PRINTING},
                             EncryptionConstants.ENCRYPTION_AES_256)));
@@ -44,7 +41,7 @@ public class FileEncryptionService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return savedFilePath;
+        return fileDestination;
     }
 
     private Certificate getPublicCertificate(String path) throws IOException, CertificateException {

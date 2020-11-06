@@ -29,26 +29,28 @@ public class FileService {
     private final ModelMapper modelMapper;
     private final PdfEditService pdfEditService;
 
-    public UploadResponseDTO encryptAndSaveFile(MultipartFile fileName, String outputPath, MultipartFile certificate)
+    public UploadResponseDTO encryptAndSaveFile(MultipartFile fileName, File outputPath, MultipartFile certificate)
             throws Exception {
-        String tempPath = outputPath + "/temp/";
 
-        String tempPdfPath = saveTempFileAndGetPath(fileName, tempPath);
-        String savedCertificatePath = saveTempFileAndGetPath(certificate, tempPath);
+        File tempPath = new File(outputPath, "temp");
+//        String tempPath = outputPath + "/temp/";
+
+        File tempPdfPath = saveTempFileAndGetPath(fileName, tempPath);
+        File savedCertificatePath = saveTempFileAndGetPath(certificate, tempPath);
         CertificateDTO certData = certificateService.getDataFromCert(savedCertificatePath);
 
         UploadedFileDTO uploadedFileData = saveDataToBase(tempPdfPath, fileName.getOriginalFilename());
         certData.setDocumentShortcut(uploadedFileData.getDocumentShortcut());
         certData.setUuid(uploadedFileData.getUuid());
 
-        String editedPdfPath = pdfEditService.addDataToPdf
-                (tempPdfPath, tempPath + "editedPdf.pdf", certData);
-        String savedFilePath = fileEncryptionService.encryptFile
-                (editedPdfPath, outputPath + "/" + fileName.getOriginalFilename(), savedCertificatePath);
+        File editedPdfPath = pdfEditService.addDataToPdf
+                (tempPdfPath, tempPath, certData);
+        File savedFilePath = fileEncryptionService.encryptFile
+                (editedPdfPath, new File(outputPath, fileName.getOriginalFilename()), savedCertificatePath);
 
 //        clearTemp(tempPath);
 
-        return new UploadResponseDTO(savedFilePath, fileName.getContentType(), fileName.getSize());
+        return new UploadResponseDTO(savedFilePath.toString(), fileName.getContentType(), fileName.getSize());
     }
 
     private void clearTemp(String tempPath) throws IOException {
@@ -56,10 +58,10 @@ public class FileService {
         FileUtils.deleteDirectory(tempDir);
     }
 
-    private UploadedFileDTO saveDataToBase(String savedPdfPath, String fileName) {
+    private UploadedFileDTO saveDataToBase(File savedPdfPath, String fileName) {
 
         UploadedFile dataToSaveToBase = new UploadedFile();
-        dataToSaveToBase.setFilePath(savedPdfPath);
+        dataToSaveToBase.setFilePath(savedPdfPath.toString());
         dataToSaveToBase.setUserName("TEST USER");
         dataToSaveToBase.setDocumentShortcut(fileName);
 
@@ -68,15 +70,14 @@ public class FileService {
         return modelMapper.map(savedFileData, UploadedFileDTO.class);
     }
 
-    private String saveTempFileAndGetPath(MultipartFile fileName, String uploadPath) {
+    private File saveTempFileAndGetPath(MultipartFile fileName, File uploadPath) {
         if(fileName == null) throw new EmptyFileException("File can not be empty.");
 
-        File uploadPathDirs = new File(uploadPath);
-        uploadPathDirs.mkdirs();
+        uploadPath.mkdirs();
 
-        String destinationPath = uploadPath + fileName.getOriginalFilename();
+//        String destinationPath = uploadPath + fileName.getOriginalFilename();
 
-        File fileToSave = new File(destinationPath);
+        File fileToSave = new File(uploadPath, fileName.getOriginalFilename());
 
         try (InputStream is = fileName.getInputStream();
              OutputStream os = new FileOutputStream(fileToSave)){
@@ -86,6 +87,6 @@ public class FileService {
             log.error("Exception during loading file.");
         }
 
-        return destinationPath;
+        return fileToSave;
     }
 }

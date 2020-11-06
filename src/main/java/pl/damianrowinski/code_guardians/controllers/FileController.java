@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.damianrowinski.code_guardians.domain.model.dtos.UploadResponseDTO;
 import pl.damianrowinski.code_guardians.services.FileService;
 
+import java.io.File;
+
 @RestController
 @RequestMapping("/api/file")
 @RequiredArgsConstructor
@@ -22,10 +24,19 @@ public class FileController {
 
         //tutaj zrobić walidację każdego z przyjętych parametrów JSONa
 
+        File outputFilePath = new File(outputPath)
+                .getCanonicalFile();
+
+        String fileContetType = fileName.getContentType();
+        String certType = certificate.getContentType();
+
+        System.out.println(fileContetType);
+        System.out.println(certType);
+
         long fileSize = fileName.getSize();
 //        if (fileSize < 1_000_000) throw new FileSizeException("Plik powinien mieć przynajmniej 1mb.");
 
-        return fileService.encryptAndSaveFile(fileName, outputPath, certificate);
+        return fileService.encryptAndSaveFile(fileName, outputFilePath, certificate);
 
     }
 

@@ -8,6 +8,7 @@ import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.springframework.stereotype.Service;
 import pl.damianrowinski.code_guardians.domain.model.dtos.CertificateDTO;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.cert.CertificateException;
@@ -17,7 +18,7 @@ import java.security.cert.X509Certificate;
 @Service
 public class CertificateService {
 
-    public CertificateDTO getDataFromCert(String path) throws IOException, CertificateException {
+    public CertificateDTO getDataFromCert(File path) throws IOException, CertificateException {
         CertificateDTO certDTO = new CertificateDTO();
 
         try (FileInputStream is = new FileInputStream(path)) {
