@@ -18,11 +18,10 @@ public class PdfEditService {
 
     public File addDataToPdf(File fileSource, File fileDest, CertificateDTO dataToAdd) throws Exception {
         File file = new File(fileDest, "editedPdf.pdf");
-        file.getParentFile().mkdirs();
 
         PdfDocument pdfDoc = new PdfDocument(
                 new PdfReader(fileSource),
-                new PdfWriter(fileDest));
+                new PdfWriter(file));
 
         Document document = new Document(pdfDoc);
 
@@ -34,6 +33,6 @@ public class PdfEditService {
 
         pdfDoc.close();
         log.info("Edited PDF, added data: " + dataToAdd);
-        return fileDest;
+        return file;
     }
 }
