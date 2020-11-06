@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import pl.damianrowinski.code_guardians.exception.EmptyFileException;
 import pl.damianrowinski.code_guardians.exception.FileSizeException;
+import pl.damianrowinski.code_guardians.exception.FileTypeException;
 
 @ControllerAdvice
 @Slf4j
@@ -26,6 +27,14 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String fileSizeException(FileSizeException ex) {
         log.error("Raised fileSizeException");
+        return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler({FileTypeException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String fileTypeException(FileTypeException ex) {
+        log.error("Raised fileTypeException");
         return ex.getMessage();
     }
 
