@@ -7,6 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class UploadResponseDTO {
     private String savedFilePath;
-    private String contentType;
     private long size;
 }

@@ -2,14 +2,14 @@ package pl.damianrowinski.code_guardians.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import pl.damianrowinski.code_guardians.domain.model.dtos.UploadDTO;
 import pl.damianrowinski.code_guardians.domain.model.dtos.UploadResponseDTO;
 import pl.damianrowinski.code_guardians.services.FileService;
-import pl.damianrowinski.code_guardians.validation.FileNameValidator;
+import pl.damianrowinski.code_guardians.validation.FileValidator;
 import pl.damianrowinski.code_guardians.validation.FileType;
 
 import java.io.File;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/file")
@@ -17,27 +17,28 @@ import java.io.File;
 public class FileController {
 
     private final FileService fileService;
-
-    @PostMapping("/upload")
-    public UploadResponseDTO upload(@RequestParam("fileName") MultipartFile fileName, @RequestParam String outputPath,
-                                    @RequestParam("cert") MultipartFile certificate) throws Exception {
-
-        //tutaj zrobić walidację każdego z przyjętych parametrów JSONa
-        File outputFilePath = new File(outputPath)
-                .getCanonicalFile();
-
-        FileNameValidator fileValidator = new FileNameValidator();
-        fileValidator.validFile(fileName.getOriginalFilename(), FileType.PDF);
-        fileValidator.validFile(certificate.getOriginalFilename(), FileType.CER);
-
-        long fileSize = fileName.getSize();
-//        if (fileSize < 1_000_000) throw new FileSizeException("Plik powinien mieć przynajmniej 1mb.");
-
-        return fileService.encryptAndSaveFile(fileName, outputFilePath, certificate);
-    }
+    private final FileValidator fileValidator;
 
     @PostMapping("/upload/list")
-    public String uploadMulti(@RequestBody UploadDTO uploadDTO) {
-        return uploadDTO.toString();
+    public List<UploadResponseDTO> uploadMulti(@RequestBody UploadDTO uploadDTO) throws Exception {
+        fileValidator.validFile(new File(uploadDTO.getCert()), FileType.CER);
+        Map<String, String> files = uploadDTO.getFiles();
+
+        return validAndEncryptPDFs(uploadDTO, files);
+    }
+
+    private List<UploadResponseDTO> validAndEncryptPDFs(UploadDTO uploadDTO, Map<String, String> files) throws Exception {
+        List<UploadResponseDTO> uploadResponseDTOList = new ArrayList<>();
+
+        Collection <String> filesToEncrypt = files.values();
+        for (String fileToEncrypt : filesToEncrypt) {
+            File fileToSave = new File(fileToEncrypt);
+            fileValidator.validFile(fileToSave, FileType.PDF);
+
+            UploadResponseDTO uploadResponseDTO = fileService.encryptAndSaveFile
+                    (fileToSave, new File(uploadDTO.getOut()), new File(uploadDTO.getCert()));
+            uploadResponseDTOList.add(uploadResponseDTO);
+        }
+        return uploadResponseDTOList;
     }
 }

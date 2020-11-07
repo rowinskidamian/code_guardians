@@ -2,11 +2,9 @@ package pl.damianrowinski.code_guardians.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import pl.damianrowinski.code_guardians.domain.model.dtos.CertificateDTO;
 import pl.damianrowinski.code_guardians.domain.model.dtos.UploadResponseDTO;
 import pl.damianrowinski.code_guardians.domain.model.dtos.UploadedFileDTO;
@@ -29,34 +27,26 @@ public class FileService {
     private final ModelMapper modelMapper;
     private final PdfEditService pdfEditService;
 
-    public UploadResponseDTO encryptAndSaveFile(MultipartFile fileName, File outputPath, MultipartFile certificate)
+    public UploadResponseDTO encryptAndSaveFile(File fileToSave, File outputPath, File certificateFilePath)
             throws Exception {
-
         File tempPath = new File(outputPath, "temp");
-//        String tempPath = outputPath + "/temp/";
+        File tempPdfPath = saveTempFileAndGetPath(fileToSave, tempPath);
 
-        File tempPdfPath = saveTempFileAndGetPath(fileName, tempPath);
-        File savedCertificatePath = saveTempFileAndGetPath(certificate, tempPath);
-        CertificateDTO certData = certificateService.getDataFromCert(savedCertificatePath);
+        CertificateDTO certData = certificateService.getDataFromCert(certificateFilePath);
 
-        UploadedFileDTO uploadedFileData = saveDataToBase(tempPdfPath, fileName.getOriginalFilename());
+        UploadedFileDTO uploadedFileData = saveDataToBase(tempPdfPath, fileToSave.getName());
         certData.setDocumentShortcut(uploadedFileData.getDocumentShortcut());
         certData.setUuid(uploadedFileData.getUuid());
 
-        File editedPdfPath = pdfEditService.addDataToPdf
-                (tempPdfPath, tempPath, certData);
+        File editedPdfPath = pdfEditService.addDataToPdf(tempPdfPath, tempPath, certData);
         File savedFilePath = fileEncryptionService.encryptFile
-                (editedPdfPath, new File(outputPath, fileName.getOriginalFilename()), savedCertificatePath);
+                (editedPdfPath, new File(outputPath, fileToSave.getName()), certificateFilePath);
 
-//        clearTemp(tempPath);
+//        FileUtils.deleteDirectory(tempPath);
 
-        return new UploadResponseDTO(savedFilePath.toString(), fileName.getContentType(), fileName.getSize());
+        return new UploadResponseDTO(savedFilePath.toString(), fileToSave.length());
     }
 
-    private void clearTemp(String tempPath) throws IOException {
-        File tempDir = new File(tempPath);
-        FileUtils.deleteDirectory(tempDir);
-    }
 
     private UploadedFileDTO saveDataToBase(File savedPdfPath, String fileName) {
 
@@ -70,23 +60,18 @@ public class FileService {
         return modelMapper.map(savedFileData, UploadedFileDTO.class);
     }
 
-    private File saveTempFileAndGetPath(MultipartFile fileName, File uploadPath) {
+    private File saveTempFileAndGetPath(File fileName, File uploadPath) throws IOException {
         if(fileName == null) throw new EmptyFileException("File can not be empty.");
-
         uploadPath.mkdirs();
 
-//        String destinationPath = uploadPath + fileName.getOriginalFilename();
+        File fileToSave = new File(uploadPath, fileName.getName());
 
-        File fileToSave = new File(uploadPath, fileName.getOriginalFilename());
-
-        try (InputStream is = fileName.getInputStream();
+        try (InputStream is = new BufferedInputStream(new FileInputStream(fileName));
              OutputStream os = new FileOutputStream(fileToSave)){
-
             IOUtils.copy(is, os);
         } catch (IOException e) {
             log.error("Exception during loading file.");
         }
-
         return fileToSave;
     }
 }
