@@ -17,13 +17,6 @@ import java.util.Map;
 @Slf4j
 public class ExceptionHandlerController {
 
-    @ExceptionHandler({EmptyFileException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String emptyFileException(EmptyFileException ex) {
-        log.error("Raised EmptyFileException.");
-        return ex.getMessage();
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidationExceptions(
@@ -45,6 +38,10 @@ public class ExceptionHandlerController {
         return ex.getMessage();
     }
 
-
-
+    @ExceptionHandler({EmptyFileException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String emptyFileException(EmptyFileException ex) {
+        log.error("Raised EmptyFileException.");
+        return ex.getMessage();
+    }
 }
