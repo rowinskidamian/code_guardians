@@ -6,8 +6,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import pl.damianrowinski.code_guardians.exception.EmptyFileException;
-import pl.damianrowinski.code_guardians.exception.FileSizeException;
-import pl.damianrowinski.code_guardians.exception.FileTypeException;
 
 import java.io.IOException;
 import java.util.HashMap;

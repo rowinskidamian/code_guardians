@@ -1,8 +1,7 @@
-package pl.damianrowinski.code_guardians.services;
+package pl.damianrowinski.code_guardians.pdf;
 
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -16,7 +15,7 @@ import java.io.File;
 
 @Service
 @Slf4j
-public class PdfEditService {
+public class PdfEditor {
 
     public File addDataToPdf(File fileSource, File fileDest, CertificateDTO dataToAdd) throws Exception {
 

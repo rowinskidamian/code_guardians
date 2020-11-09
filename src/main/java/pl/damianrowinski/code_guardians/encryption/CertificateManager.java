@@ -1,4 +1,4 @@
-package pl.damianrowinski.code_guardians.services;
+package pl.damianrowinski.code_guardians.encryption;
 
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -16,7 +16,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 @Service
-public class CertificateService {
+public class CertificateManager {
 
     public CertificateDTO getDataFromCert(File path) throws IOException, CertificateException {
         CertificateDTO certDTO = new CertificateDTO();

@@ -2,6 +2,7 @@ package pl.damianrowinski.code_guardians.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,10 @@ import pl.damianrowinski.code_guardians.domain.model.dtos.UploadResponseDTO;
 import pl.damianrowinski.code_guardians.domain.model.dtos.UploadedFileDTO;
 import pl.damianrowinski.code_guardians.domain.model.entites.UploadedFile;
 import pl.damianrowinski.code_guardians.domain.repositories.UploadedFileRepository;
+import pl.damianrowinski.code_guardians.encryption.CertificateManager;
+import pl.damianrowinski.code_guardians.encryption.FileEncryptor;
 import pl.damianrowinski.code_guardians.exception.EmptyFileException;
+import pl.damianrowinski.code_guardians.pdf.PdfEditor;
 
 import javax.transaction.Transactional;
 import java.io.*;
@@ -21,28 +25,28 @@ import java.io.*;
 @RequiredArgsConstructor
 public class FileService {
 
-    private final CertificateService certificateService;
-    private final FileEncryptionService fileEncryptionService;
+    private final CertificateManager certificateManager;
+    private final FileEncryptor fileEncryptor;
     private final UploadedFileRepository fileRepository;
     private final ModelMapper modelMapper;
-    private final PdfEditService pdfEditService;
+    private final PdfEditor pdfEditor;
 
     public UploadResponseDTO encryptAndSaveFile(File fileToSave, File outputPath, File certificateFilePath)
             throws Exception {
         File tempPath = new File(outputPath, "temp");
         File tempPdfPath = saveTempFileAndGetPath(fileToSave, tempPath);
 
-        CertificateDTO certData = certificateService.getDataFromCert(certificateFilePath);
+        CertificateDTO certData = certificateManager.getDataFromCert(certificateFilePath);
 
         UploadedFileDTO uploadedFileData = saveDataToBase(tempPdfPath, fileToSave.getName());
         certData.setDocumentShortcut(uploadedFileData.getDocumentShortcut());
         certData.setUuid(uploadedFileData.getUuid());
 
-        File editedPdfPath = pdfEditService.addDataToPdf(tempPdfPath, tempPath, certData);
-        File savedFilePath = fileEncryptionService.encryptFile
+        File editedPdfPath = pdfEditor.addDataToPdf(tempPdfPath, tempPath, certData);
+        File savedFilePath = fileEncryptor.encryptFile
                 (editedPdfPath, new File(outputPath, fileToSave.getName()), certificateFilePath);
 
-//        FileUtils.deleteDirectory(tempPath);
+        FileUtils.deleteDirectory(tempPath);
 
         return new UploadResponseDTO(savedFilePath.toString(), fileToSave.length());
     }

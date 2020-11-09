@@ -1,4 +1,4 @@
-package pl.damianrowinski.code_guardians.services;
+package pl.damianrowinski.code_guardians.encryption;
 
 import com.itextpdf.kernel.pdf.EncryptionConstants;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class FileEncryptionService {
+public class FileEncryptor {
 
     public File encryptFile(File fileSource, File fileDestination, File certificateSrc) {
         fileDestination.getParentFile().mkdirs();
