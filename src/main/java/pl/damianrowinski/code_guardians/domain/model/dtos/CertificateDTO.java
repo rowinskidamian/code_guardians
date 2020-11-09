@@ -11,8 +11,7 @@ public class CertificateDTO {
     private String documentShortcut;
     private UUID uuid;
 
-    @Override
-    public String toString() {
+    public String getDataForPdf() {
         return "Common Name: " + commonName + ", organization: " + organization + ", document shortcut: "
                 + documentShortcut + ", uuid: " + uuid.toString();
     }

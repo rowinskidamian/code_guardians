@@ -38,7 +38,7 @@ public class PdfEditor {
             document.add(areaBreak);
         }
 
-        Paragraph paragraphToAdd = new Paragraph(dataToAdd.toString());
+        Paragraph paragraphToAdd = new Paragraph(dataToAdd.getDataForPdf());
         document.add(paragraphToAdd);
         document.close();
 
