@@ -60,7 +60,7 @@ public class FileService {
         return modelMapper.map(savedFileData, UploadedFileDTO.class);
     }
 
-    private File saveTempFileAndGetPath(File fileName, File uploadPath) throws IOException {
+    private File saveTempFileAndGetPath(File fileName, File uploadPath) {
         if(fileName == null) throw new EmptyFileException("File can not be empty.");
         uploadPath.mkdirs();
 

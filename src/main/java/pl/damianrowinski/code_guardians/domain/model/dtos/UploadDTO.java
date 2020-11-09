@@ -1,7 +1,7 @@
 package pl.damianrowinski.code_guardians.domain.model.dtos;
 
 import lombok.Data;
-import pl.damianrowinski.code_guardians.validation.CerFile;
+import pl.damianrowinski.code_guardians.validation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,13 @@ public class UploadDTO {
 
     @CerFile
     private String cert;
+
+    @PdfFiles
+    @MinSize(FileSize.ONE_MB)
+    @MaxSize(FileSize.TEN_MB)
     private Map<String, String> files;
+
+    @OutFolder
     private String out;
 
     public UploadDTO() {
