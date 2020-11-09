@@ -2,7 +2,7 @@ POST http://localhost:8080/api/file/upload/list
 Content-Type: application/json
 
 {
- "cert": "C:\\Users\\damia\\Desktop\\programowanie\\ZADANIAprogramistyczne\\StranicyKodu\\upload\\damian.cer",
+ "cert": "C:\\Users\\damia\\Desktop\\programowanie\\ZADANIAprogramistyczne\\StranicyKodu\\upload\\damian.cert",
  "files":{
    "hello.pdf": "C:\\Users\\damia\\Desktop\\programowanie\\ZADANIAprogramistyczne\\StranicyKodu\\upload\\hello.pdf",
    "hello2.pdf": "C:\\Users\\damia\\Desktop\\programowanie\\ZADANIAprogramistyczne\\StranicyKodu\\upload\\hello2.pdf"
