@@ -1,4 +1,4 @@
-package pl.damianrowinski.code_guardians.validation;
+package pl.damianrowinski.code_guardians.validation.types;
 
 public enum FileType {
     PDF("pdf"), CER("cer");

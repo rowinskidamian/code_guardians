@@ -1,4 +1,7 @@
-package pl.damianrowinski.code_guardians.validation;
+package pl.damianrowinski.code_guardians.validation.annotations;
+
+import pl.damianrowinski.code_guardians.validation.validators.MaxSizeValidator;
+import pl.damianrowinski.code_guardians.validation.types.FileSize;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -7,11 +10,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = OutFolderValidator.class)
+@Constraint(validatedBy = MaxSizeValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface OutFolder {
-    String message() default "Wrong folder path";
+public @interface MaxSize {
+    FileSize value();
+    String message() default "File should be max 10MB";
 
     Class<?>[] groups() default {};
 

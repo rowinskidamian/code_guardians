@@ -1,7 +1,8 @@
 package pl.damianrowinski.code_guardians.domain.model.dtos;
 
 import lombok.Data;
-import pl.damianrowinski.code_guardians.validation.*;
+import pl.damianrowinski.code_guardians.validation.annotations.*;
+import pl.damianrowinski.code_guardians.validation.types.FileSize;
 
 import java.util.HashMap;
 import java.util.Map;

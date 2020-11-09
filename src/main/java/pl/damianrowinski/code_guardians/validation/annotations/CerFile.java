@@ -1,4 +1,6 @@
-package pl.damianrowinski.code_guardians.validation;
+package pl.damianrowinski.code_guardians.validation.annotations;
+
+import pl.damianrowinski.code_guardians.validation.validators.CerFileValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

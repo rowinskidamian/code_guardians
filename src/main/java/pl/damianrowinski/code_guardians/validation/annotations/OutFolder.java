@@ -1,4 +1,6 @@
-package pl.damianrowinski.code_guardians.validation;
+package pl.damianrowinski.code_guardians.validation.annotations;
+
+import pl.damianrowinski.code_guardians.validation.validators.OutFolderValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -7,11 +9,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = PdfFilesValidator.class)
+@Constraint(validatedBy = OutFolderValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PdfFiles {
-    String message() default "File should be with *.pdf extension.";
+public @interface OutFolder {
+    String message() default "Wrong folder path";
 
     Class<?>[] groups() default {};
 

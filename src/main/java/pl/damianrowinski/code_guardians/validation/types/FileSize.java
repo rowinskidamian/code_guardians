@@ -1,4 +1,4 @@
-package pl.damianrowinski.code_guardians.validation;
+package pl.damianrowinski.code_guardians.validation.types;
 
 public enum FileSize {
     ONE_MB(1_000_000), TEN_MB(10_000_000);

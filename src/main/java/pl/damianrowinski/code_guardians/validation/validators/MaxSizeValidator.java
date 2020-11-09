@@ -1,6 +1,8 @@
-package pl.damianrowinski.code_guardians.validation;
+package pl.damianrowinski.code_guardians.validation.validators;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.damianrowinski.code_guardians.validation.annotations.MaxSize;
+import pl.damianrowinski.code_guardians.validation.types.FileSize;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -10,11 +12,11 @@ import java.util.Collection;
 import java.util.Map;
 
 @Slf4j
-public class MinSizeValidator implements ConstraintValidator<MinSize, Map<String, String>> {
+public class MaxSizeValidator implements ConstraintValidator<MaxSize, Map<String, String>> {
     private FileSize fileSize;
 
     @Override
-    public void initialize(MinSize constraint) {
+    public void initialize(MaxSize constraint) {
         fileSize = constraint.value();
     }
 
@@ -32,7 +34,6 @@ public class MinSizeValidator implements ConstraintValidator<MinSize, Map<String
                 return false;
             }
         }
-        return currentFileSize >= Long.parseLong(fileSize.toString());
+        return currentFileSize <= Long.parseLong(fileSize.toString());
     }
-
 }

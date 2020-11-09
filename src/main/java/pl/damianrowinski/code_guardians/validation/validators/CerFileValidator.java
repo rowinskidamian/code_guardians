@@ -1,6 +1,8 @@
-package pl.damianrowinski.code_guardians.validation;
+package pl.damianrowinski.code_guardians.validation.validators;
 
 import lombok.extern.slf4j.Slf4j;
+import pl.damianrowinski.code_guardians.validation.annotations.CerFile;
+import pl.damianrowinski.code_guardians.validation.types.FileType;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
