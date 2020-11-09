@@ -1,5 +1,5 @@
 # code_guardians
-Microservice, currently in development, for Strażnicy Kodu Asseco Coding contest https://straznicykodu.assecods.pl/ .<br>
+Microservice, for Strażnicy Kodu Asseco Coding contest https://straznicykodu.assecods.pl/ .<br>
 <b>Goals:</b>
 1. Spring Boot REST app with one end-point.
 2. Chose (PDFs and certificate) files from your computer.
