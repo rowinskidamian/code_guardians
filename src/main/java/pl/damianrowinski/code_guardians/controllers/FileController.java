@@ -1,6 +1,7 @@
 package pl.damianrowinski.code_guardians.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.damianrowinski.code_guardians.domain.model.dtos.UploadDTO;
 import pl.damianrowinski.code_guardians.domain.model.dtos.UploadResponseDTO;
@@ -20,7 +21,7 @@ public class FileController {
     private final FileValidator fileValidator;
 
     @PostMapping("/upload/list")
-    public List<UploadResponseDTO> uploadMulti(@RequestBody UploadDTO uploadDTO) throws Exception {
+    public List<UploadResponseDTO> uploadMulti(@Validated @RequestBody UploadDTO uploadDTO) throws Exception {
         fileValidator.validFile(new File(uploadDTO.getCert()), FileType.CER);
         Map<String, String> files = uploadDTO.getFiles();
 

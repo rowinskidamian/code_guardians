@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Data
 public class UploadDTO {
-
+    
     private String cert;
     private Map<String, String> files;
     private String out;
